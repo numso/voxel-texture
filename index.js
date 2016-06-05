@@ -281,18 +281,18 @@ Texture.prototype.sprite = function(name, w, h, cb) {
   img.src = self.texturePath + ext(name);
   img.onerror = cb;
   img.onload = function() {
-    var canvases = [];
+    var foo = { canvases: [] };
     for (var x = 0; x < img.width; x += w) {
       for (var y = 0; y < img.height; y += h) {
         var canvas = document.createElement('canvas');
         canvas.width = w; canvas.height = h;
         canvas.name = name + '_' + x + '_' + y;
         canvas.getContext('2d').drawImage(img, x, y, w, h, 0, 0, w, h);
-        canvases.push(canvas);
+        foo.canvases.push(canvas);
       }
     }
     var textures = [];
-    each(canvases, function(canvas, next) {
+    each(foo.canvases, function(canvas, next) {
       var tex = new Image();
       tex.name = canvas.name;
       tex.src = canvas.toDataURL();
@@ -306,7 +306,7 @@ Texture.prototype.sprite = function(name, w, h, cb) {
       ]);
     }, function() {
       self._afterLoading();
-      delete canvases;
+      delete foo.canvases;
       self.materials = self.materials.concat(textures);
       cb(textures);
     });
